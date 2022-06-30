@@ -1,9 +1,35 @@
 import { readFile, writeFile } from 'fs/promises';
+import pg from 'pg';
 
+const { Pool } = pg;
 /** A class representing a database to store scores */
 class Database {
-  constructor() {
-    this.path = 'scores.json';
+  constructor()  {
+    this.dburl = 'postgres://jvxhkcxjvrnons:de1cac9dce08f81b815548648ed1328becc0317e28e9f767176c3a901bec7688@ec2-3-222-74-92.compute-1.amazonaws.com:5432/d4g3s1qqal5ue7';
+  }
+
+  async connect() {
+    this.pool = new Pool({
+      connectionString: this.dburl,
+      ssl: { rejectUnauthorized: false }
+    });
+    this.client = await this.pool.connect();
+    await this.init();
+  }
+  async init() {
+    const queryText = `
+      create table if not exists scores (
+        name varchar(30),
+        score integer,
+        word varchar(30)
+      );
+    `;
+    const res = await this.client.query(queryText);
+  }
+
+  async close() {
+    this.client.release();
+    await this.pool.end();
   }
 
   /**
@@ -70,7 +96,8 @@ class Database {
 
   async _read() {
     try {
-      const data = await readFile(this.path, 'utf8');
+      const res = await this.client.query('SELECT * FROM scores');
+      data = res.rows;
       return JSON.parse(data);
     } catch (error) {
       return { word: [], game: [] };
@@ -79,6 +106,7 @@ class Database {
 
   // This is a private methods. The # prefix means that they are private.
   async _write(data) {
+    const res = await this.client.query(`INSERT INTO scores (${data.name}, ${data.score}, ${data.word});`);
     await writeFile(this.path, JSON.stringify(data), 'utf8');
   }
 }
