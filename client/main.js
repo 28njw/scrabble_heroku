@@ -20,6 +20,7 @@ const playButtonElement = document.getElementById('play');
 const resetButtonElement = document.getElementById('reset');
 const helpButtonElement = document.getElementById('help');
 const hintElement = document.getElementById('hint');
+const endButtonElement = document.getElementById('end');
 
 // Useful constants
 const TILE_COUNT = 7;
@@ -114,7 +115,8 @@ playButtonElement.addEventListener('click', () => {
 
     // Save and display the word score.
     // TODO #12: Save the word score and render it to the UI
-
+    wordScoreBoard.saveWordScore(getPlayerName(turn), score);
+    wordScoreBoard.render(document.getElementById('word-score-board'));
     // Update the UI for the next player and rerender the players.
     turn = nextTurn();
     multiPlayerView(playersElement, racks, turn);
@@ -157,3 +159,10 @@ helpButtonElement.addEventListener('click', () => {
 });
 
 // TODO #13: Handle a click event when "End" button is clicked
+endButtonElement.addEventListener('click', () => {
+  for(let i = 1; i <= NUMBER_OF_PLAYERS; ++i){
+    gameScoreBoard.saveGameScore(getPlayerName(turn), scores[i-1]);
+    scores[i-1] = 0;
+  }
+  topWordAndGameScoreBoard.render(document.getElementById('top-10-score-board'));
+});
