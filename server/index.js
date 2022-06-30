@@ -12,13 +12,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev'));
 app.use('/', express.static('client'));
 // TODO #4: Implement the /wordScore endpoint
-
+app.post('/wordScore', async (request, response) => {
+  const options = request.body;
+  database.saveWordScore(options.name, options.word, options.score);
+  response.end('{ "status": "success" }');
+});
 // TODO #5: Implement the /highestWordScores endpoint
-
+app.get('/highestWordScores', async (request, response) => {
+  response.end(JSON.stringify(database.top10WordScores()));
+});
 // TODO #6: Implement the /gameScore endpoint
-
+app.post('/gameScore', async (request, response) => {
+  const options = request.body;
+  database.saveGameScore(options.name, options.score);
+  response.end('{ "status": "success" }');
+});
 // TODO #7: Implement the /highestGameScores endpoint
-
+app.get('/highestGameScores', async (request, response) => {
+  response.end(JSON.stringify(database.top10GameScores()));
+});
 // EVERYTHING BELOW THIS WILL WORK AFTER YOU IMPLEMENT THE ABOVE
 
 // This matches all routes that are not defined.
