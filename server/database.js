@@ -107,7 +107,6 @@ class Database {
   // This is a private methods. The # prefix means that they are private.
   async _write(data) {
     const res = await this.client.query(`INSERT INTO scores (${data.name}, ${data.score}, ${data.word});`);
-    await writeFile(this.path, JSON.stringify(data), 'utf8');
   }
 }
 
