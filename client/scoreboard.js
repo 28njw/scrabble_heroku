@@ -57,23 +57,29 @@ class TopWordAndGameScoreBoard {
   // TODO #10: Render the top word and game scores
   async render(element) {
     element.innerHTML = '';
-    let header = document.createElement('div');
-    header.innerText = 'Top Word Scores: ';
-    element.appendChild(header);
-    let sortedWords = this.words.sort((a, b) => a.score > b.score ? 1 : -1);
-    let sortedGames = this.game.sort((a, b) => a.score > b.score ? 1 : -1);
-    for(let i = 0; i < Math.min(5, this.words.length); ++i){
-      const div = document.createElement('div');
-      div.innerText = this.words[i];
-      element.appendChild(div);
+    let html = '<h1>Top Word Scores</h1>';
+    html += '<table>';
+    let sortedWords = wordScoreBoard.words.sort((a, b) => a.score > b.score ? 1 : -1);
+    let sortedGames = gameScoreBoard.game.sort((a, b) => a.score > b.score ? 1 : -1);
+    for(let i = 0; i < Math.min(5, wordScoreBoard.words.length); ++i){
+      html += `
+      <tr>
+        <td>${wordScoreBoard.words[i].name}</td>
+        <td>${wordScoreBoard.words[i].word}</td>
+        <td>${wordScoreBoard.words[i].score}</td>
+      </tr>
+    `;
     }
-    header = document.createElement('div');
-    header.innerText = 'Top Game Scores: ';
-    element.appendChild(header);
-    for(let i = 0; i < Math.min(5, this.game.length); ++i){
-      const div = document.createElement('div');
-      div.innerText = this.game[i];
-      element.appendChild(div);
+    html += '</table>';
+    html += '<h1>Top Game Scores</h1>';
+    html += '<table>';
+    for(let i = 0; i < Math.min(5, gameScoreBoard.game.length); ++i){
+      html += `
+      <tr>
+        <td>${gameScoreBoard.game[i].name}</td>
+        <td>${gameScoreBoard.game[i].score}</td>
+      </tr>
+    `;
     }
   }
 }

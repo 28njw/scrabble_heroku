@@ -115,7 +115,7 @@ playButtonElement.addEventListener('click', () => {
 
     // Save and display the word score.
     // TODO #12: Save the word score and render it to the UI
-    wordScoreBoard.saveWordScore(getPlayerName(turn), score);
+    wordScoreBoard.saveWordScore(getPlayerName(turn), word, score);
     wordScoreBoard.render(document.getElementById('word-score-board'));
     // Update the UI for the next player and rerender the players.
     turn = nextTurn();
